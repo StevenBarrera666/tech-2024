@@ -2,7 +2,7 @@ const express = require('express');
 const router = express.Router();
 const bcrypt = require('bcrypt');
 const UserSchema = require('../models/User');
-const MessageSchema = require('../models/Message');
+const MessageSchema = require('../models/Mensajes');
 const UserController = require('../controllers/UserController'); //Importando el controllador
 const multer = require('multer');
 const userController = new UserController(); // creando una instancia de ese controlador
@@ -28,6 +28,7 @@ router.get('/user/:id', async (req, res) => {
 
 router.post('/user', async (req, res) => {
     //Crear un usuario
+    console.log('Datos recibidos en req.body:', req.body);
     const hashedPassword = await bcrypt.hash(req.body.password, 10)
 
     let user = UserSchema({
