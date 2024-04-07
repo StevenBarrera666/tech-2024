@@ -6,6 +6,8 @@ require('dotenv').config() // Obetenmos las variables de entorno
 
 /**web Sockets*/
 const socket = require('socket.io')//importamos la libreria socket
+const cors = require('cors');
+app.use(cors());
 const http = require('http').Server(app)//vamos a requerir la libreria http
 const io = socket(http)// se le asocia el servidor al web socket
 
@@ -16,9 +18,7 @@ const schema = require('./graphql/schema');
 /** Conexion a BD */
 const DB_URL = process.env.DB_URL || '';
 const mongoose = require('mongoose'); // Importo la libreria mongoose
-mongoose.connect(DB_URL).then(()=>{
-    console.log('Conexion exitosa a la base de datos')
-}).catch(error =>console.log(err));
+mongoose.connect(DB_URL)
 // Creo la cadena de conexion
 
 
@@ -62,6 +62,9 @@ io.on('connect',(socket) => {
    
         
     })
+    //Con el metodo emit, se emiten eventos hacia el cliente.
+    //En el postman para que funcione el servicio, se debe configurar como socket.io y configurarlo con http://localhost:9090
+    
 
     socket.on('disconnect', (socket) => {
         console.log('Usuario desconectado')
@@ -87,7 +90,9 @@ app.use(router)
 app.use('/uploads', express.static('uploads'));
 app.use('/', userRoutes)
 app.use('/', houseRoutes)
-// app.use('/', messageRoutes)
+app.use('/', messageRoutes)
 http.listen(port, () => {
     console.log('Listen on ' + port)
 })
+
+module.exports = http
